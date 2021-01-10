@@ -3,3 +3,5 @@ __pycache__
 db.sqlite3
 credentials.json
 token.pickle
+/media
+/static
