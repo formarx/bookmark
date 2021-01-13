@@ -1,10 +1,11 @@
 from django.db import models
 #from django.contrib.auth.models import User
 from django.conf import settings
+import datetime
 
 # Create your models here.
 class ReceiptList(models.Model):
-    receipt_date = models.DateField("접수날짜", auto_now=True)
+    receipt_date = models.DateField("접수날짜", default=datetime.datetime.now)
     receipt_user = models.ManyToManyField(settings.AUTH_USER_MODEL)
     company_name = models.CharField("회사명", max_length=100)
     sourcing = models.CharField("Sourcing", max_length=20, null=True)

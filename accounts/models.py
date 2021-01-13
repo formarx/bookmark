@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+import datetime
 
 # Create your models here.
 class Profile(models.Model):
@@ -8,7 +9,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
     phone = models.CharField(max_length=100, default='')
-    birth_day = models.DateField("생일", auto_now=True)
+    birth_day = models.DateField("생일", default=datetime.datetime.now)
 
     class Meta:
         db_table = 'accounts_profile'
