@@ -16,7 +16,8 @@ from google.auth.transport.requests import Request
 # Create your views here.
 class BookmarkListView(ListView):
     model = Bookmark
-    paginate_by = 6
+    paginate_by = 5
+    ordering = "id"
 
 class BookmarkCreateView(CreateView):
     model = Bookmark

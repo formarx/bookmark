@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('bookmark.urls')),
     path('photo/', include('photo.urls')),
     path('accounts/', include('accounts.urls')),
+    path('deallist/', include('deallist.urls')),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL) 

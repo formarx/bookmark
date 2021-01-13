@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}DealList List{% endblock %}
+
+{% block content %}
+    <div class="btn-group">
+        <a href="{% url 'add' %}" class="btn btn-info">Add Deal</a>
+    </div>
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>                
+                <th scope="col">접수자</th>
+                <th scope="col">회사명</th>
+                <th scope="col">Sourcing</th>
+                <th scope="col">사업영역</th>
+                <th scope="col">Memo</th>
+                <th scope="col">접수일</th>
+                <th scope="col">Modify</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deal in object_list %}
+                <tr>
+                    <td>{{ deal.receipt_date|date:"Y년n월w주" }}</td>
+                    <td>{{ deal.get_username }}</td>
+                    <td>{{ deal.company_name }}</td>
+                    <td>{{ deal.sourcing }}</td>
+                    <td>{{ deal.company_field }}</td>
+                    <td>{{ deal.memo }}</td>
+                    <td><a href="{% url 'update' pk=deal.id %}" class="btn btn-success btn-sm">Modify</a></td>
+                    <td><a href="{% url 'delete' pk=deal.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+{% block pagination %}
+    {% include 'pagination.html' %}
+{% endblock %}
