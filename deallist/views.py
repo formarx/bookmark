@@ -15,13 +15,13 @@ class DealListListView(ListView):
     model = ReceiptList
     template_name = "deallist/list.html"
     paginate_by = 30
-    ordering="-receipt_date"
+    ordering=['-receipt_date', '-id']
 
 
 class DealListCreateView(CreateView):
     model = ReceiptList
     #fields = '__all__'
-    success_url = reverse_lazy('list')
+    success_url = reverse_lazy('deallist:list')
     form_class = DealListCreationForm
     template_name = 'deallist/create.html'
 
@@ -31,10 +31,11 @@ class DealListDetailView(DetailView):
 
 class DealListUpdateView(UpdateView):
     model = ReceiptList
-    fields = '__all__'
-    template_name_suffix = '_update'
+    #fields = '__all__'
+    #template_name_suffix = '_update'
+    template_name = 'deallist/create.html'
     success_url = reverse_lazy('deallist:list')
-    #form = DealListCreationForm
+    form_class = DealListCreationForm
 
 class DealListDeleteView(DeleteView):
     model = ReceiptList
