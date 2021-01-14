@@ -4,17 +4,17 @@
 
 {% block content %}
     <div class="btn-group">
-        <a href="{% url 'add' %}" class="btn btn-info">Add Deal</a>
+        <a href="{% url 'deallist:add' %}" class="btn btn-info">Add Deal</a>
     </div>
     <table class="table table-sm table-hover small">
         <thead>
             <tr>                
                 <th scope="col" class="col">접수일</th>
-                <th scope="col" class="col-md-auto">접수자</th>
                 <th scope="col" class="col-md-auto">회사명</th>
-                <th scope="col" class="col-md-auto">Sourcing</th>
                 <th scope="col" class="col-md-auto">사업영역</th>
                 <th scope="col" class="col-md-auto">Memo</th>
+                <th scope="col" class="col-md-auto">접수자</th>
+                <th scope="col" class="col-md-auto">Sourcing</th>
                 <th scope="col" class="col">M</th>
                 <th scope="col" class="col">D</th>
             </tr>
@@ -23,13 +23,13 @@
             {% for deal in object_list %}
                 <tr class="input-group-mb {% if deal.is_invest %}table-success{% endif %}"">
                     <td>{{ deal.receipt_date|date:"Y년n월w주" }}</td>
-                    <td>{{ deal.get_username }}</td>
                     <td>{{ deal.company_name }}</td>
-                    <td>{{ deal.sourcing }}</td>
                     <td>{{ deal.company_field }}</td>
                     <td>{{ deal.memo|linebreaksbr }}</textarea></td>
-                    <td><a href="{% url 'update' pk=deal.id %}" class="btn btn-success btn-sm">M</a></td>
-                    <td><a href="{% url 'delete' pk=deal.id %}" class="btn btn-danger btn-sm">D</a></td>
+                    <td>{{ deal.get_username }}</td>
+                    <td>{{ deal.sourcing }}</td>
+                    <td><a href="{% url 'deallist:update' pk=deal.id %}" class="btn btn-success btn-sm">M</a></td>
+                    <td><a href="{% url 'deallist:delete' pk=deal.id %}" class="btn btn-danger btn-sm">D</a></td>
                 </tr>
             {% endfor %}
         </tbody>

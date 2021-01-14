@@ -1,14 +1,12 @@
 from django import forms
-from .models import *
-from .widgets import *
+from .models import ReceiptList
+from .widgets import DatePickerWidget
 
 class DealListCreationForm(forms.ModelForm):
-    company_name = forms.CharField(label='DD', widget=DatePickerWidget)
-
-    class meta:
+    class Meta:
         model = ReceiptList
-        fields = ['company_name']
+        fields = '__all__'
         widgets = {
-            'company_name': CounterTextInput,
+            #'company_name': CounterTextInput,
             'receipt_date': DatePickerWidget,
         }

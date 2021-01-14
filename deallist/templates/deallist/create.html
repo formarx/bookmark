@@ -3,9 +3,13 @@
 {% block title %}DealList Add{% endblock %}
 
 {% block content %}
+{{form.media}}
+
     <form action="" method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="add" class="btn btn-info btn-sm">
+        <table>
+            {% csrf_token %}
+            {{form.as_table}}
+            <tr><td><input type="submit" value="Add DealList" class="btn btn-info btn-sm"></td></tr>
+        </table>
     </form>
 {% endblock content %}

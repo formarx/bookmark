@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="btn-group">
-        <a href="{% url 'add' %}" class="btn btn-info">Add Bookmark</a>
+        <a href="{% url 'bookmark:add' %}" class="btn btn-info">Add Bookmark</a>
     </div>
     <table class="table">
         <thead>
@@ -20,10 +20,10 @@
             {% for bookmark in object_list %}
                 <tr>
                     <td>{{ bookmark.id }}</td>
-                    <td><a href="{% url 'detail' pk=bookmark.id %}">{{ bookmark.site_name }}</a></td>
+                    <td><a href="{% url 'bookmark:detail' pk=bookmark.id %}">{{ bookmark.site_name }}</a></td>
                     <td><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.url }}</a></td>
-                    <td><a href="{% url 'update' pk=bookmark.id %}" class="btn btn-success btn-sm">Modify</a></td>
-                    <td><a href="{% url 'delete' pk=bookmark.id %}" class="btn btn-danger btn-sm">Delete</a></td>
+                    <td><a href="{% url 'bookmark:update' pk=bookmark.id %}" class="btn btn-success btn-sm">Modify</a></td>
+                    <td><a href="{% url 'bookmark:delete' pk=bookmark.id %}" class="btn btn-danger btn-sm">Delete</a></td>
                 </tr>
             {% endfor %}
         </tbody>

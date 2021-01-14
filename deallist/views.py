@@ -20,9 +20,9 @@ class DealListListView(ListView):
 
 class DealListCreateView(CreateView):
     model = ReceiptList
-    fields = '__all__'
+    #fields = '__all__'
     success_url = reverse_lazy('list')
-    form = DealListCreationForm
+    form_class = DealListCreationForm
     template_name = 'deallist/create.html'
 
 
@@ -33,9 +33,9 @@ class DealListUpdateView(UpdateView):
     model = ReceiptList
     fields = '__all__'
     template_name_suffix = '_update'
-    success_url = reverse_lazy('list')
-    form = DealListCreationForm
+    success_url = reverse_lazy('deallist:list')
+    #form = DealListCreationForm
 
 class DealListDeleteView(DeleteView):
     model = ReceiptList
-    success_url = reverse_lazy('list')
+    success_url = reverse_lazy('deallist:list')
