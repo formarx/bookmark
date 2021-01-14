@@ -1,3 +1,5 @@
+# deallist/view.py
+
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -6,6 +8,7 @@ from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 
 from .models import *
+from .forms import DealListCreationForm
 
 # Create your views here.
 class DealListListView(ListView):
@@ -17,18 +20,21 @@ class DealListListView(ListView):
 
 class DealListCreateView(CreateView):
     model = ReceiptList
-    fields = ['receipt_date', 'receipt_user', 'company_name', 'sourcing', 'company_field', 'memo', 'is_invest']
+    fields = '__all__'
     success_url = reverse_lazy('list')
+    form = DealListCreationForm
     template_name = 'deallist/create.html'
+
 
 class DealListDetailView(DetailView):
     model = ReceiptList
 
 class DealListUpdateView(UpdateView):
     model = ReceiptList
-    fields = ['receipt_date', 'receipt_user', 'company_name', 'sourcing', 'company_field', 'memo','is_invest']
+    fields = '__all__'
     template_name_suffix = '_update'
     success_url = reverse_lazy('list')
+    form = DealListCreationForm
 
 class DealListDeleteView(DeleteView):
     model = ReceiptList

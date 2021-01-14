@@ -10,7 +10,7 @@ class ReceiptList(models.Model):
     company_name = models.CharField("회사명", max_length=100)
     sourcing = models.CharField("Sourcing", max_length=20, null=True)
     company_field = models.CharField("사업영역", max_length=100, null=True)
-    memo = models.TextField("메모", null=True)
+    memo = models.TextField("메모", blank=True, default="")
     is_invest = models.BooleanField("투자진행", default=False)
 
     def __str__(self):
