@@ -25,6 +25,9 @@ urlpatterns = [
     path('photo/', include('photo.urls')),
     path('accounts/', include('accounts.urls')),
     path('deallist/', include('deallist.urls')),
+    path('summernote/', include('django_summernote.urls')),
+    path('board/', include('board.urls')),
 ] 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL) 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL) 
