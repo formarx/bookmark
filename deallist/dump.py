@@ -5,7 +5,7 @@ from datetime import datetime as dd
 
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from .models import *
+from deallist.models import *
 
 ex_file = './deallist/deallist.xlsx'
 
