@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from core.models import TimeStampedModel
 #from accounts.models import Account
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Board(models.Model):
     def __str__(self):
@@ -71,7 +71,7 @@ class Post(TimeStampedModel):
     is_deleted = models.BooleanField(default=False)
     page_view_count = models.IntegerField(default=0)
     like_count = models.IntegerField(default=0)
-    account = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     ip = models.GenericIPAddressField(null=True, default='')
 
     def get_absolute_url(self):
@@ -95,5 +95,5 @@ class Comment(TimeStampedModel):
     content = models.TextField(default='')
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
-    account = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     ip = models.GenericIPAddressField(null=True, default='')
