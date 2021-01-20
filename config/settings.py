@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'deallist',
     'django_summernote',
+    'pipeline',
     'board',
     'core',
 ]
@@ -70,6 +71,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'custom_templatetag': 'board.templatetags.hide_ip',
+            }
         },
     },
 ]
@@ -110,9 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -131,11 +135,39 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = '/'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineManifestStorage'
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE = {
+    'JAVASCRIPT': {
+        'main': {
+            'source_filenames': [
+              'js/*.js'
+            ],
+            'output_filename': 'js/vendor.js'
+        },
+    },
+    'STYLESHEETS': {
+        'main': {
+            'source_filenames': [
+              'style/*.scss'
+            ],
+            'output_filename': 'style/main.css'
+        },
+    },
+}
+
+
+
+LOGIN_REDIRECT_URL = '/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 SUMMERNOTE_CONFIG = {
-    'iframe': True,
+    'iframe': False,
 }

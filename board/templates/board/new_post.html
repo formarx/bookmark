@@ -1,0 +1,11 @@
+{% extends 'board/post_input_base.html' %}
+
+{% block title %}글 쓰기{% endblock %}
+
+{% block header %}글 쓰기{% endblock %}
+
+{% block form_action_url %}{% url 'board:new_post' board.slug %}{% endblock %}
+
+{% block submit_button_name %}등록{% endblock %}
+
+{% block cancel_url %}{% url 'board:post_list' board.slug %}{% endblock %}

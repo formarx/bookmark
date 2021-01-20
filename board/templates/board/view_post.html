@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 
-
-
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+<div class="container-fluid">
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default post-panel">
@@ -12,7 +11,7 @@
                 <span class="panel-title">{{ post.title }}</span>
                 <div class="post-info">
                     {% if is_modified %}
-                        <span id="post_history"><a href="{% url 'board:post_history_list' post.id%}">수정 내역</a></span> 
+                        <span id="post_history"><a href="{% url 'board:post_history_list' post.id%}">수정 내역</a></span>
                     {% endif %}
                     {% if post.account %}
                         <span class="text-muted">작성자: {{ post.account.username }}</span>
@@ -34,14 +33,14 @@
         <div class="text-center form-inline">
             <button class="form-control btn btn-primary like-button" post-id="{{ post.id }}">
                 <span class="like-count">{{ post.like_count }}</span>
-                &nbsp;<i class="glyphicon glyphicon-thumbs-up"></i>&nbsp;추천!
+                &nbsp;<i class="bi bi-hand-thumbs-up"></i>&nbsp;추천!
             </button>
         </div>
 
 
         <!-- comment -->
         <h3>댓글</h3>
-        <div>
+        <div class="row">
             <iframe src="{% url 'board:comment_list' post.id %}" class="comment-iframe" scrolling="no"></iframe>
         </div>
         <br/>
@@ -51,8 +50,8 @@
                         path="{% url 'board:post_list' post.board.slug %}">목록</button>
             </div>
             {% if is_authenticated %}
-                <div class="col-sm-4">
-                    <button id="id_edit_post_button" class="form-control btn btn-default redirection-button"
+            <div class="col-sm-4">
+                <button id="id_edit_post_button" class="form-control btn btn-default redirection-button"
                             path="{% url 'board:edit_post' post.id %}">수정</button>
             </div>
             <div class="col-sm-4">
@@ -64,5 +63,6 @@
             {% endif %}
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
