@@ -20,7 +20,7 @@ class Board(models.Model):
     comments_chunk_size = models.IntegerField(default=5)
     comment_pages_nav_chunk_size = models.IntegerField(default=10)
 
-    #is_approval = models.BooleanField(default=False)
+    is_approval = models.BooleanField(default=False)
 
 
 class PostQuerySet(models.QuerySet):
