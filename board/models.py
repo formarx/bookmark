@@ -20,6 +20,8 @@ class Board(models.Model):
     comments_chunk_size = models.IntegerField(default=5)
     comment_pages_nav_chunk_size = models.IntegerField(default=10)
 
+    #is_approval = models.BooleanField(default=False)
+
 
 class PostQuerySet(models.QuerySet):
     def search(self, search_flag, query):
@@ -73,6 +75,7 @@ class Post(TimeStampedModel):
     like_count = models.IntegerField(default=0)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     ip = models.GenericIPAddressField(null=True, default='')
+    
 
     def get_absolute_url(self):
         return reverse('board:view_post', args=[self.id])
@@ -97,3 +100,26 @@ class Comment(TimeStampedModel):
     is_deleted = models.BooleanField(default=False)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     ip = models.GenericIPAddressField(null=True, default='')
+
+
+class Approval(TimeStampedModel):
+    def __str__(self):
+        return self.account
+    
+    APPROVAL_LINE = [
+        ('A', '결재'),
+        ('B', '합의'),
+        ('C', '참조'),
+    ]
+
+    APPROVAL_STATE = [
+        ('YET', '미결'),
+        ('YES', '결재'),
+        ('NO', '반려'),
+    ]
+
+    post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
+    appr_line = models.CharField(max_length=1, choices=APPROVAL_LINE, default='A')
+    appr_priorty = models.IntegerField(default=0)
+    appr_state = models.CharField(max_length=3, choices=APPROVAL_STATE, default='YET')

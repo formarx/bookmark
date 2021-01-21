@@ -124,7 +124,7 @@ def view_post(request, post_id):
     pages_nav_info = get_pages_nav_info(comments, nav_chunk_size=post.board.comment_pages_nav_chunk_size)
 
     is_authenticated = False
-    if post.account == request.user:
+    if post.account == request.user or request.user.is_superuser:
         is_authenticated = True
 
     return render(request, 'board/view_post.html', {
@@ -253,10 +253,11 @@ def edit_post(request, post_id):
 @require_POST
 def new_comment(request, post_id):
     post = Post.objects.get(id=post_id)
-    if request.user.is_authenticated:
+    content = request.POST['comment_content']
+    if request.user.is_authenticated and content != '':
         Comment.objects.create(
             post=post,
-            content=request.POST['comment_content'],
+            content=content,
             account=request.user,
             ip=get_ip(request)
         )
