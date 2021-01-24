@@ -21,7 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bookmark/', include('bookmark.urls')),
-    path('', include('bookmark.urls')),
+    path('', include('board.urls')),
     path('photo/', include('photo.urls')),
     path('accounts/', include('accounts.urls')),
     path('deallist/', include('deallist.urls')),

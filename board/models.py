@@ -6,6 +6,8 @@ from core.models import TimeStampedModel
 #from accounts.models import Account
 from django.conf import settings
 
+from django.utils.translation import gettext_lazy as _
+
 class Board(models.Model):
     def __str__(self):
         return 'Board Name: ' + self.name
@@ -104,22 +106,20 @@ class Comment(TimeStampedModel):
 
 class Approval(TimeStampedModel):
     def __str__(self):
-        return self.account
-    
-    APPROVAL_LINE = [
-        ('A', '결재'),
-        ('B', '합의'),
-        ('C', '참조'),
-    ]
+        return self.account.__str__()
 
-    APPROVAL_STATE = [
-        ('YET', '미결'),
-        ('YES', '결재'),
-        ('NO', '반려'),
-    ]
+    class ApprLine(models.TextChoices):
+        APPROVAL = 'A', _('결재')
+        AGREEMENT = 'B', _('합의')
+        REFERENCE = 'C', _('참조')
+
+    class ApprState(models.TextChoices):
+        NOTYET = 'NY', _('미결')
+        ACCEPT = 'AC', _('승인')
+        RETURN = 'RT', _('반려')
 
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
-    appr_line = models.CharField(max_length=1, choices=APPROVAL_LINE, default='A')
-    appr_priorty = models.IntegerField(default=0)
-    appr_state = models.CharField(max_length=3, choices=APPROVAL_STATE, default='YET')
+    appr_line = models.CharField(max_length=1, choices=ApprLine.choices, default=ApprLine.APPROVAL)
+    appr_priority = models.IntegerField(default=0)
+    appr_state = models.CharField(max_length=2, choices=ApprState.choices, default=ApprState.NOTYET)

@@ -7,13 +7,13 @@ from django.urls import reverse
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
-from board.models import Post, Board, Comment, EditedPostHistory, Attachment
+from board.models import Post, Board, Comment, EditedPostHistory, Attachment, Approval
 #from accounts.models import Account
 from board.forms import PostForm, AttachmentForm
 from core.utils import get_pages_nav_info, get_ip
 
-
 @require_GET
+@login_required
 def home(request):
     boards = Board.objects.all()
 
@@ -51,7 +51,7 @@ def new_post(request, board_slug):
 
     return render(request, 'board/new_post.html', {'board': board, 'post_form': post_form, 'attachment_form': attachment_form})
 
-
+@login_required
 @require_GET
 def post_list(request, board_slug):
     board = Board.objects.get(slug=board_slug)
@@ -90,7 +90,7 @@ def post_list(request, board_slug):
         'search_info': search_info
     })
 
-
+@login_required
 @require_GET
 def view_post(request, post_id):
     non_sliced_query_set = Post.objects.filter(id=post_id)
@@ -127,6 +127,11 @@ def view_post(request, post_id):
     if post.account == request.user or request.user.is_superuser:
         is_authenticated = True
 
+    is_approval = post.board.is_approval
+    appr_list = []
+    if is_approval:
+        appr_list = Approval.objects.filter(post=post).order_by('appr_priority')
+
     return render(request, 'board/view_post.html', {
         'post': post,
         'uploaded_file': uploaded_file,
@@ -134,9 +139,11 @@ def view_post(request, post_id):
         'comments': comments,
         'pages_nav_info': pages_nav_info,
         'is_authenticated': is_authenticated,
+        'is_approval': is_approval,
+        'appr_list': appr_list,
     })
 
-
+@login_required
 @require_GET
 def comment_list(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -162,7 +169,7 @@ def comment_list(request, post_id):
         'pages_nav_info': pages_nav_info
     })
 
-
+@login_required
 @require_GET
 def post_history_list(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -182,9 +189,14 @@ def post_history_list(request, post_id):
     })
 
 
+@login_required
 def edit_post(request, post_id):
     origin_post = Post.objects.get(id=post_id)
     edited_post = Post.objects.get(id=post_id)
+
+    if request.user != origin_post.account or request.user.is_superuser:
+        return redirect('/')
+
     try:
         origin_attachment = Attachment.objects.get(post=origin_post)
         origin_attachment_name = origin_attachment.attachment.name
