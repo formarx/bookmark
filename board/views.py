@@ -25,7 +25,6 @@ def home(request):
         })
     return render(request, 'board/home.html', {'home_data': data})
 
-
 @login_required
 def new_post(request, board_slug):
     board = Board.objects.get(slug=board_slug)

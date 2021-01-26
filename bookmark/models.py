@@ -8,7 +8,6 @@ class Bookmark(models.Model):
 
     def __str__(self):
         return self.site_name+" "+self.url
-    
+
     def get_absolute_url(self):
         return reverse("detail", args=[str(self.id)])
-    

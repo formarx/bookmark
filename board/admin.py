@@ -15,7 +15,6 @@ class ApprovalInline(admin.TabularInline):
             return 3
         return 0
 
-
 class PostModelAdmin(SummernoteModelAdmin):
     inlines = (ApprovalInline,)
 

@@ -7,7 +7,6 @@ from .models import Post, Attachment
 EMPTY_TITLE_ERROR = "제목을 입력하세요"
 EMPTY_CONTENT_ERROR = "내용을 입력하세요"
 
-
 class DivErrorList(ErrorList):
     def __str__(self):
         return self.as_divs()
@@ -16,7 +15,6 @@ class DivErrorList(ErrorList):
         if not self:
             return ''
         return '<div class="form-group has-error">%s</div>' % ''.join(['<div class="help-block">%s</div>' % e for e in self])
-
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -35,7 +33,6 @@ class PostForm(forms.ModelForm):
         kwargs_new = {'error_class': DivErrorList}
         kwargs_new.update(kwargs)
         super(PostForm, self).__init__(*args, **kwargs_new)
-
 
 class AttachmentForm(forms.ModelForm):
     class Meta:

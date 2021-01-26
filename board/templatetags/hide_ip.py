@@ -1,9 +1,7 @@
 import re
-
 from django import template
 
 register = template.Library()
-
 
 @register.simple_tag
 def hide_ip(ip):

@@ -2,11 +2,11 @@ from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 
-from core.models import TimeStampedModel
 #from accounts.models import Account
 from django.conf import settings
-
 from django.utils.translation import gettext_lazy as _
+
+from core.models import TimeStampedModel
 
 class Board(models.Model):
     def __str__(self):
@@ -77,7 +77,6 @@ class Post(TimeStampedModel):
     like_count = models.IntegerField(default=0)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
     ip = models.GenericIPAddressField(null=True, default='')
-    
 
     def get_absolute_url(self):
         return reverse('board:view_post', args=[self.id])
@@ -92,7 +91,8 @@ class EditedPostHistory(TimeStampedModel):
 
 class Attachment(models.Model):
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
-    editedPostHistory = models.ForeignKey(EditedPostHistory, null=True, default=None, on_delete=models.CASCADE)
+    editedPostHistory = models.ForeignKey(EditedPostHistory, null=True, default=None,
+        on_delete=models.CASCADE)
     attachment = models.FileField(blank=True, null=True)
 
 
