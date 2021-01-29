@@ -5,7 +5,7 @@ from datetime import datetime as dd
 
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from deallist.models import *
+from deallist.models import ReceiptList
 
 ex_file = './deallist/deallist.xlsx'
 
@@ -81,5 +81,3 @@ def dump(req):
 
 
     return redirect('/deallist')
-
-

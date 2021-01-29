@@ -1,7 +1,7 @@
+import datetime
 from django.db import models
 #from django.contrib.auth.models import User
 from django.conf import settings
-import datetime
 
 # Create your models here.
 class ReceiptList(models.Model):
@@ -18,13 +18,14 @@ class ReceiptList(models.Model):
 
     def get_username(self):
         rname = ''
-        for ru in self.receipt_user.all():
-            rname = rname + ru.username + '/'
+        for ruser in self.receipt_user.all():
+            rname = rname + ruser.username + '/'
         return rname[:-1]
 
 
 class ReviewList(models.Model):
-    receipt_id = models.ForeignKey(ReceiptList, on_delete=models.CASCADE, related_name='receipt_review')
+    receipt_id = models.ForeignKey(ReceiptList, on_delete=models.CASCADE,
+        related_name='receipt_review')
     review_user = models.ManyToManyField(settings.AUTH_USER_MODEL)
     review_detail = models.TextField("세부사항", null=True)
     is_acctive = models.BooleanField("진행여부", default=True)
