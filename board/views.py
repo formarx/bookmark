@@ -228,8 +228,6 @@ def edit_post(request, post_id):
 
         if origin_post.title != request.POST['title'] or \
                 origin_post.content != request.POST['content'] or attach_edit:
-            print(origin_attachment_name)
-            print(request.FILES.get('attachment', ''))
 
             if post_form.is_valid() and attachment_form.is_valid():
                 edited_post.save()
@@ -329,5 +327,19 @@ def like_post(request, post_id):
 
 @login_required
 @require_POST
-def edit_appr(request, post_id, appr_id):
+@csrf_exempt
+def edit_appr(request, post_id):
     post = Post.objects.get(id=post_id)
+
+    is_approval = post.board.is_approval
+    appr_list = []
+    if is_approval:
+        appr_list = Approval.objects.filter(post=post).order_by('appr_priority')
+
+    for appr in appr_list:
+        if appr.account == request.user :
+            appr_sel = "appr_state-%d" % appr.id
+            appr.appr_state = request.POST[appr_sel]
+            appr.save()
+
+    return redirect(post)
