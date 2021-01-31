@@ -30,4 +30,3 @@ class DealListCreationForm(forms.ModelForm):
         for _ru in cleaned_data['receipt_user']:
             ru.append(User.objects.get(username=_ru))
         return ru
-

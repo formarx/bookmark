@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import *
+from .views import BookmarkCreateView, BookmarkDeleteView, BookmarkDetailView, \
+        BookmarkListView, BookmarkUpdateView
 
 app_name = 'bookmark'
 urlpatterns = [

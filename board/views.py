@@ -48,7 +48,8 @@ def new_post(request, board_slug):
         post_form = PostForm()
         attachment_form = AttachmentForm()
 
-    return render(request, 'board/new_post.html', {'board': board, 'post_form': post_form, 'attachment_form': attachment_form})
+    return render(request, 'board/new_post.html', {'board': board, 'post_form': post_form, 
+        'attachment_form': attachment_form})
 
 @login_required
 @require_GET
@@ -63,8 +64,8 @@ def post_list(request, board_slug):
     }
 
     if search_info['query']:
-        posts = Post.objects.board(board).remain().search(search_info['selected_flag'], search_info['query'])\
-            .order_by('-id')
+        posts = Post.objects.board(board).remain().search(search_info['selected_flag'], 
+            search_info['query']).order_by('-id')
     else:
         posts = Post.objects.board(board).remain().order_by('-id')
 
@@ -120,7 +121,8 @@ def view_post(request, post_id):
         # If page is out of range (e.g. 9999), deliver last page of results.
         comments = paginator.page(paginator.num_pages)
 
-    pages_nav_info = get_pages_nav_info(comments, nav_chunk_size=post.board.comment_pages_nav_chunk_size)
+    pages_nav_info = get_pages_nav_info(comments,
+        nav_chunk_size=post.board.comment_pages_nav_chunk_size)
 
     is_authenticated = False
     if post.account == request.user or request.user.is_superuser:
@@ -131,6 +133,13 @@ def view_post(request, post_id):
     if is_approval:
         appr_list = Approval.objects.filter(post=post).order_by('appr_priority')
 
+    # search
+    appr_info = {
+        'query': request.GET.get('query', ''),
+        'selected_flag': request.GET.get('search_flag', 'TITLE'),
+        'flags': Approval.ApprState.choices
+    }
+
     return render(request, 'board/view_post.html', {
         'post': post,
         'uploaded_file': uploaded_file,
@@ -140,6 +149,7 @@ def view_post(request, post_id):
         'is_authenticated': is_authenticated,
         'is_approval': is_approval,
         'appr_list': appr_list,
+        'appr_info': appr_info,
     })
 
 @login_required
@@ -160,7 +170,8 @@ def comment_list(request, post_id):
         # If page is out of range (e.g. 9999), deliver last page of results.
         comments = paginator.page(paginator.num_pages)
 
-    pages_nav_info = get_pages_nav_info(comments, nav_chunk_size=post.board.comment_pages_nav_chunk_size)
+    pages_nav_info = get_pages_nav_info(comments,
+        nav_chunk_size=post.board.comment_pages_nav_chunk_size)
 
     return render(request, 'board/comment_list.html', {
         'post': post,
@@ -193,7 +204,7 @@ def edit_post(request, post_id):
     origin_post = Post.objects.get(id=post_id)
     edited_post = Post.objects.get(id=post_id)
 
-    if request.user != origin_post.account or request.user.is_superuser:
+    if request.user != origin_post.account and not request.user.is_superuser:
         return redirect('/')
 
     try:
@@ -206,8 +217,20 @@ def edit_post(request, post_id):
     if request.method == 'POST':
         post_form = PostForm(request.POST, instance=edited_post)
         attachment_form = AttachmentForm(request.POST, request.FILES)
-        if origin_post.title != request.POST['title'] or origin_post.content != request.POST['content'] or \
-                origin_attachment_name != request.FILES.get('attachment', ''):
+
+        # origin_attachment_name != request.FILES.get('attachment', ''):
+        if not origin_attachment and request.FILES.get('attachment', '') != '' or \
+                origin_attachment and request.FILES.get('attachment', '') != '' or \
+                request.POST.get('attachment-clear', '') == 'on':
+            attach_edit = True
+        else:
+            attach_edit = False
+
+        if origin_post.title != request.POST['title'] or \
+                origin_post.content != request.POST['content'] or attach_edit:
+            print(origin_attachment_name)
+            print(request.FILES.get('attachment', ''))
+
             if post_form.is_valid() and attachment_form.is_valid():
                 edited_post.save()
 
@@ -258,7 +281,8 @@ def edit_post(request, post_id):
         else:
             attachment_form = AttachmentForm()
 
-    return render(request, 'board/edit_post.html', {'post': origin_post, 'post_form': post_form, 'attachment_form': attachment_form})
+    return render(request, 'board/edit_post.html',
+        {'post': origin_post, 'post_form': post_form, 'attachment_form': attachment_form})
 
 
 @require_POST
@@ -302,3 +326,8 @@ def like_post(request, post_id):
     post.update(like_count=F('like_count') + 1)
 
     return HttpResponse(post[0].like_count)
+
+@login_required
+@require_POST
+def edit_appr(request, post_id, appr_id):
+    post = Post.objects.get(id=post_id)

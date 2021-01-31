@@ -4,7 +4,6 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default post-panel">
@@ -27,18 +26,27 @@
                 <div class="panel-approval">
                     <div class="row">
                         {% for appr in appr_list %}
-                            <div class="col-md-1">{{appr.account.username}}</div>
+                            <div class="col col-md-2">{{appr.get_appr_line_display}}:{{appr.account.username}}</div>
                         {% endfor %%}
+                        <div class="col"></div>
                     </div>
                     <div class="row">
                         {% for appr in appr_list %}
-                            <div class="col-md-1">{{appr.get_appr_line_display}}</div>
+                            <div class="col col-md-2">
+                                <select name="appr_state" class="form-control appr-state" {% if appr.account.username != request.user.username %}Disabled{% endif %}>
+                                {% for key, value in appr_info.flags %}
+                                <option value="{{ key }}"
+                                    {% if appr.appr_state == key %} selected {% endif %}>{{ value}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
                         {% endfor %%}
-                    </div>
-                    <div class="row">
-                        {% for appr in appr_list %}
-                            <div class="col-md-1">{{appr.get_appr_state_display}}</div>
-                        {% endfor %%}
+                        <div class="col col-md-2">
+                        <form method="POST" action="{% url 'board:view_post' post.id %}">
+                            {% csrf_token %}
+                            <button id="id_delete_post_button" type="submit" class="form-control btn btn-primary">결재</button>
+                        </form>
+                        </div>
                     </div>
                 </div>
             {% endif %}
@@ -84,6 +92,5 @@
             {% endif %}
         </div>
     </div>
-</div>
 </div>
 {% endblock %}
