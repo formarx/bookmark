@@ -1,0 +1,43 @@
+{% load url_parameter %}
+
+<nav class="page-nav" aria-label="Page navigation">
+    <ul class="pagination justify-content-center pagination-sm">
+        {% if pages_nav_info.pre_nav_page != -1 %}
+            <li class="page-item">
+                {% if search_info.query != "" %}
+                <a class="page-link" href="{% url_parameter page=pages_nav_info.pre_nav_page search_flag=search_info.selected_flag query=search_info.query %}">Previous</a>
+                {% else %}
+                <a class="page-link" href="{% url_parameter page=pages_nav_info.pre_nav_page %}">Previous</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link">Previous</a></li>
+        {% endif %}
+
+        {% for page_num in pages_nav_info.page_list %}
+            {% if page_num == pages_nav_info.current_page_num %}
+                <li class="page-item disabled current-page-num"><a class="page-link">{{ page_num }}</a></li>
+            {% else %}
+                <li class="page-item other-page-num">
+                    {% if search_info.query != "" %}
+                    <a class="page-link" href="{% url_parameter page=page_num search_flag=search_info.selected_flag query=search_info.query %}">{{ page_num }}</a>
+                    {% else %}
+                    <a class="page-link" href="{% url_parameter page=page_num %}">{{ page_num }}</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if pages_nav_info.next_nav_page != -1 %}
+            <li class="page-item">
+                {% if search_info.query != "" %}
+                <a class="page-link" href="{% url_parameter page=pages_nav_info.next_nav_page search_flag=search_info.selected_flag query=search_info.query %}">Next</a>
+                {% else %}
+                <a class="page-link" href="{% url_parameter page=pages_nav_info.next_nav_page %}">Next</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li class="page-item disabled"><a class="page-link">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>

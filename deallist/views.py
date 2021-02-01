@@ -12,7 +12,7 @@ from .forms import DealListCreationForm
 class DealListListView(ListView):
     model = ReceiptList
     template_name = "deallist/list.html"
-    paginate_by = 30
+    paginate_by = 3
     ordering=['-receipt_date', '-id']
 
 

@@ -11,9 +11,11 @@
             {% endif %}
 
             {% for object in page_obj.paginator.page_range %}
+            {% if forloop.counter > page_obj.number - 10 %}
                 <li class="page-item {% if page_obj.number == forloop.counter %}disabled{% endif %}">
                     <a class="page-link" href="{{ request.path }}?page={{ forloop.counter }}">{{ forloop.counter }}</a>
                 </li>
+            {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
                 <li class="page-item">
