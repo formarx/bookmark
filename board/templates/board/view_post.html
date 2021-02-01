@@ -30,11 +30,10 @@
                         {% endfor %%}
                         <div class="col"></div>
                     </div>
-                    <form method="POST" action="{% url 'board:edit_appr' post.id%}">
-                    <div class="row">
+                    <form  class="row" method="POST" action="{% url 'board:edit_appr' post.id%}">
                         {% for appr in appr_list %}
                             <div class="col col-md-2">
-                                <select name="appr_state-{{appr.id}}" class="form-control appr-state" {% if appr.account.username != request.user.username %}Disabled{% endif %}>
+                                <select name="appr_state-{{appr.id}}" class="form-select appr-state" {% if appr.account.username != request.user.username %}Disabled{% endif %}>
                                 {% for key, value in appr_info.flags %}
                                 <option value="{{ key }}"
                                     {% if appr.appr_state == key %} selected {% endif %}>{{ value}}</option>
@@ -46,7 +45,6 @@
                             {% csrf_token %}
                             <button id="id_edit_appr_button" type="submit" class="form-control btn btn-primary">결재</button>
                         </div>
-                    </div>
                     </form>
                 </div>
             {% endif %}

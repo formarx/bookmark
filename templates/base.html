@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Home</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <ul class="navbar-nav me-auto mb-1 mb-md-0">
                 <li class="nav-item active">
                     <a class="nav-link" aria-current="page" href="/deallist/">DealList</a>
                 </li>
@@ -27,13 +27,10 @@
                     <a class="nav-link active" aria-current="page" href="/photo/">Photo</a>
                 </li>
             </ul>
-        <ul class="navbar-nav mb-2 mb-md-0">
+        <ul class="navbar-nav justify-content-end">
             {% if user.is_authenticated %}
             <li class="nav-item">
                <a class="nav-link" href="#/">Welcome, {{user.get_username}}</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link" href="{% url 'photo:upload' %}">Upload</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
