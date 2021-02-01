@@ -27,6 +27,7 @@ urlpatterns = [
     path('deallist/', include('deallist.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('board/', include('board.urls')),
+    path('todo/', include('todo.urls')),
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

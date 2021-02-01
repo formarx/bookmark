@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'pipeline',
     'board',
     'core',
+    'todo',
 ]
 
 MIDDLEWARE = [
