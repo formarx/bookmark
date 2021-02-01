@@ -6,6 +6,9 @@ class TodoProject(models.Model):
     pname = models.CharField(max_length=100)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.pname
+
 class TodoList(models.Model):
     pcode = models.ForeignKey(TodoProject, on_delete=models.CASCADE)
     title = models.CharField(blank=False, max_length=100)

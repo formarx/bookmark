@@ -15,6 +15,12 @@ class DealListListView(ListView):
     paginate_by = 3
     ordering=['-receipt_date', '-id']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if context['is_paginated']:
+            context["min_page"] = min(context['page_obj'].number - 5, context['page_obj'].paginator.num_pages - 10)
+            context["max_page"] = max(context['page_obj'].number + 5, 11)
+        return context
 
 class DealListCreateView(CreateView):
     model = ReceiptList

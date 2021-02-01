@@ -27,7 +27,7 @@
                     <div class="row">
                         {% for appr in appr_list %}
                             <div class="col col-md-2">{{appr.get_appr_line_display}}:{{appr.account.username}}</div>
-                        {% endfor %%}
+                        {% endfor %}
                         <div class="col"></div>
                     </div>
                     <form  class="row" method="POST" action="{% url 'board:edit_appr' post.id%}">
@@ -36,11 +36,11 @@
                                 <select name="appr_state-{{appr.id}}" class="form-select appr-state" {% if appr.account.username != request.user.username %}Disabled{% endif %}>
                                 {% for key, value in appr_info.flags %}
                                 <option value="{{ key }}"
-                                    {% if appr.appr_state == key %} selected {% endif %}>{{ value}}</option>
+                                    {% if appr.appr_state == key %} selected {% endif %}>{{ value }}</option>
                                 {% endfor %}
                                 </select>
                             </div>
-                        {% endfor %%}
+                        {% endfor %}
                         <div class="col col-md-2">
                             {% csrf_token %}
                             <button id="id_edit_appr_button" type="submit" class="form-control btn btn-primary">결재</button>
