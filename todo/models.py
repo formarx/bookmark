@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Max
 from django.conf import settings
 
 # Create your models here.
@@ -22,6 +23,11 @@ class TodoList(models.Model):
     
     def todo_save(self):
         self.is_complete = False
+        if TodoList.objects.filter(pcode=self.pcode).aggregate(Max('priority'))['priority__max'] is None:
+            self.priority = 1
+        else:
+            self.priority = int(TodoList.objects.filter(pcode=self.pcode).latest('priority').priority) + 1
+        self.save()
 
     def todo_update(self, complete):
         self.is_complete = complete
