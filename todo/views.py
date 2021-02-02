@@ -1,7 +1,9 @@
 from datetime import datetime
+import json
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import JsonResponse
 
 from .models import TodoList, TodoProject
 from .forms import TodoForm
@@ -35,7 +37,7 @@ class Todo_ListView(generic.TemplateView):
                 close_end_day.append(i.title)
         
         return render(request, template_name, {
-            'todo_list_endDatea_non_complete': todo_list_endDate_non_complete,
+            'todo_list_endDate_non_complete': todo_list_endDate_non_complete,
             'todo_list_endDate_complete': todo_list_endDate_complete,
             'todo_list_no_endDate': todo_list_no_endDate,
             'close_end_day': close_end_day,
@@ -86,6 +88,24 @@ def check_post(request, pcode):
         return render(request, template_name, {'form': form, 'pcode': pcode})
 
     return render(request, template_name)
+
+def save_priority(reqeust):
+    todo_list = json.loads(reqeust.POST['todo_dict'])
+    for key, value in todo_list.items():
+        if key == "None":
+            continue
+        todo_selected = TodoList.objects.get(id=key)
+        todo_selected.priority = value
+        todo_selected.save()
+    return JsonResponse({'text': '저장되었습니다'})
+
+def is_complete(request):
+    pk = request.POST['data']
+    return JsonResponse(checkbox_event(pk, True))
+
+def is_non_complete(request):
+    pk = request.POST['data']
+    return JsonResponse(checkbox_event(pk, False))
 
 def checkbox_event(pk, is_check):
     todo_selected = TodoList.objects.get(id=pk)

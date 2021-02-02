@@ -1,0 +1,82 @@
+{% load static %}
+    <script src="{% static 'js/Sortable.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+        new Sortable(todo_list_endDate, {
+            animation: 150,
+            ghostClass: 'blue-background-class'
+        });
+        new Sortable(todo_list_no_endDate, {
+            animation: 150,
+            ghostClass: 'blue-background-class'
+        });
+
+
+    </script>
+
+    <script>
+        function prioirty_save(){
+            todo_list = $(".list-group-item");
+            todo_dict = {}
+            for(var i = 0 ; i < todo_list.length ; i++){
+                todo_dict[todo_list[i].getAttribute("div_pk")] = i + 1
+            }
+            console.log(todo_dict);
+            $.ajax({
+              type: "POST",
+              url: "{% url 'todo:save_priority' %}",
+              data: {'todo_dict': JSON.stringify(todo_dict), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+              dataType: "json",
+              success: function(response){
+                console.log("성공");
+                window.location.href = "{% url 'todo:list' pcode=pcode %}"
+              },
+              error: function(request, status, error){
+                console.log("실패.");
+              },
+            });
+        }
+    </script>
+
+    <script>
+        completed = document.getElementsByName('complete');
+        for(var i = 0; i < completed.length ; i++){
+            completed[i].checked = true;
+        }
+
+        $("input[name*=complete]").change(function(){
+            if($(this).is(":checked")){
+                pk = $(this).attr("pk");
+                $.ajax({
+                  type: "POST",
+                  url: "{% url 'todo:is_complete' %}",
+                  data: {'data': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  dataType: "json",
+                  success: function(response){
+                    console.log("성공");
+                    window.location.href = "{% url 'todo:list' pcode=pcode %}"
+                  },
+                  error: function(request, status, error){
+                    console.log("실패.");
+                  },
+                });
+            }
+            //체크박스 해제
+            else{
+                pk = $(this).attr("pk");
+                $.ajax({
+                  type: "POST",
+                  url: "{% url 'todo:is_non_complete' %}",
+                  data: {'data': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                  dataType: "json",
+                  success: function(response){
+                    window.location.href = "{% url 'todo:list' pcode=pcode %}"
+                  },
+                  error: function(request, status, error){
+                    console.log("실패.");
+                  },
+                });
+            }
+        });
+
+    </script>
