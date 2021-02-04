@@ -111,12 +111,35 @@ class Approval(TimeStampedModel):
     class ApprLine(models.TextChoices):
         APPROVAL = 'A', _('결재')
         AGREEMENT = 'B', _('합의')
-        REFERENCE = 'C', _('참조')
+        RECEIVE = 'R', _('수신')
+        CARBONCOPY = 'C', _('참조')
 
     class ApprState(models.TextChoices):
         NOTYET = 'NY', _('대기')
         ACCEPT = 'AC', _('승인')
         RETURN = 'RT', _('반려')
+    
+    PostState = [
+        ('draft', (
+            ('dd', '상신된'),
+            ('dc', '완료된'),
+            ('dt', '저장된'),
+            ('dr', '반려된'),
+            ('dn', '반송된'),
+            ('de', '회수된')
+        )),
+        ('approval', (
+            ('ab', '결재전'),
+            ('ai', '진행중'),
+            ('ac', '완료된'),
+            ('ar', '반려된')
+        )),
+        ('referrnece',(
+            ('rb', '수신전'),
+            ('rc', '완료된')  
+        )),
+        ('cc', '참조')
+    ]
 
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     account = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.DO_NOTHING)

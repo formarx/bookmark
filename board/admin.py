@@ -11,7 +11,7 @@ class ApprovalInline(admin.TabularInline):
     verbose_name_plural = 'Approval'
     
     def get_extra(self, request, obj=None, **kwargs):
-        if obj.board.is_approval and obj.approval_set.count() < 2:
+        if obj and obj.board.is_approval and obj.approval_set.count() < 2:
             return 3
         return 0
 

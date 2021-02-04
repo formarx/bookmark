@@ -53,7 +53,7 @@ def new_post(request, board_slug):
 
 @login_required
 @require_GET
-def post_list(request, board_slug):
+def post_list(request, board_slug, appr_type='all'):
     board = Board.objects.get(slug=board_slug)
 
     # search
@@ -63,11 +63,14 @@ def post_list(request, board_slug):
         'flags': Post.SEARCH_FLAG
     }
 
-    if search_info['query']:
-        posts = Post.objects.board(board).remain().search(search_info['selected_flag'], 
-            search_info['query']).order_by('-id')
+    if board.is_approval and appr_type != 'all':
+        posts = get_appr_list(request, appr_type)
     else:
-        posts = Post.objects.board(board).remain().order_by('-id')
+        if search_info['query']:
+            posts = Post.objects.board(board).remain().search(search_info['selected_flag'], 
+                search_info['query']).order_by('-id')
+        else:
+            posts = Post.objects.board(board).remain().order_by('-id')
 
     # pagination
     paginator = Paginator(posts, board.posts_chunk_size)
@@ -343,3 +346,68 @@ def edit_appr(request, post_id):
             appr.save()
 
     return redirect(post)
+
+def get_appr_list(request, appr_type='dd'):
+    ## 상신함 draft
+    if appr_type[0] == 'd': 
+        appr_list = Approval.objects.filter(account=request.user, appr_priority=1).order_by('-id')
+    ## 결재함
+    elif appr_type[0] == 'a':
+        appr_list = Approval.objects.filter(account=request.user, appr_priority__gt=1).order_by('-id')
+    ## 수신함
+    elif appr_type[0] == 'r':
+        appr_list = Approval.objects.filter(account=request.user, appr_line=Approval.ApprLine.RECEIVE).order_by('-id')
+    ## 참조함
+    elif appr_type == 'cc':
+        appr_list = Approval.objects.filter(account=request.user, appr_line=Approval.ApprLine.CARBONCOPY).order_by('-id')
+    else:
+        return []    
+
+    posts = []
+    for appr in appr_list:
+        if check_appr(request, appr.post.id, appr_type):
+            post = Post.objects.get(id=appr.post.id)
+            posts.append(post)
+
+    return posts
+
+def check_appr(request, post_id, appr_type):
+    appr_list = Approval.objects.filter(post=post_id, appr_priority__gt=0).order_by('appr_priority')
+
+    appr_max = len(appr_list) - 1
+
+    return_val = False
+    if appr_type == 'dd': # 상신한 
+        return_val = appr_list[appr_max].appr_state == Approval.ApprState.NOTYET
+    elif appr_type == 'dc': # 완료된
+        return_val = appr_list[appr_max].appr_state == Approval.ApprState.ACCEPT
+    elif appr_type == 'dt': # 저장된
+        return_val = appr_list[0].appr_state == Approval.ApprState.NOTYET
+    elif appr_type == 'dr': # 반려된
+        return_val = appr_list[0].appr_state == Approval.ApprState.RETURN
+    #elif appr_type == 'dn': # 반송된
+    #elif appr_type == 'de': # 회수된
+    ## 결재함
+    elif appr_type == 'ab': # 결재전
+        appr = Approval.objects.get(post=post_id, account=request.user)
+        if appr.appr_state == Approval.ApprState.NOTYET:
+            prev_apprs = Approval.objects.filter(post=post_id, appr_priority=appr.appr_priority-1)
+            return_val = True
+            for prev_appr in prev_apprs:
+                if prev_appr.appr_state != Approval.ApprState.ACCEPT:
+                    return_val = False
+    elif appr_type == 'ai': # 진행중
+        appr = Approval.objects.get(post=post_id, account=request.user)
+        return_val = appr.appr_state == Approval.ApprState.ACCEPT and appr_list[appr_max].appr_state == Approval.ApprState.NOTYET
+    elif appr_type == 'ac': # 완료된
+        return_val = appr_list[appr_max].appr_state == Approval.ApprState.ACCEPT
+    #elif appr_type == 'ar': # 반려된
+    ## 수신함
+    elif appr_type == 'rb': # 수신전
+        appr = Approval.objects.get(post=post_id, account=request.user)
+        return_val = appr.appr_state == Approval.ApprState.NOTYET
+    elif appr_type == 'rc': # 완료된
+        appr = Approval.objects.get(post=post_id, account=request.user)
+        return_val = appr.appr_state == Approval.ApprState.ACCEPT
+
+    return return_val

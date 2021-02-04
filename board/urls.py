@@ -6,6 +6,7 @@ app_name = 'board'
 urlpatterns = [
     path('', views.home, name='home'),
     path('boards/<slug:board_slug>/', views.post_list, name='post_list'),
+    path('boards/<slug:board_slug>/<slug:appr_type>/', views.post_list, name='appr_list'),
     path('boards/<slug:board_slug>/posts/new/', views.new_post, name='new_post'),
     path('posts/<int:post_id>/', views.view_post, name='view_post'),
     path('posts/<int:post_id>/delete/', views.delete_post, name='delete_post'),

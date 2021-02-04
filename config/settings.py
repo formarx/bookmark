@@ -170,5 +170,5 @@ LOGIN_REDIRECT_URL = '/'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 SUMMERNOTE_CONFIG = {
-    'iframe': False,
+    'iframe': True,
 }
