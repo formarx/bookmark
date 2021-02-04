@@ -114,7 +114,7 @@ class Approval(TimeStampedModel):
         REFERENCE = 'C', _('참조')
 
     class ApprState(models.TextChoices):
-        NOTYET = 'NY', _('미결')
+        NOTYET = 'NY', _('대기')
         ACCEPT = 'AC', _('승인')
         RETURN = 'RT', _('반려')
 

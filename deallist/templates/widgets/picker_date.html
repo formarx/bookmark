@@ -7,6 +7,8 @@
 <script>
     $("#{{widget.attrs.id}}").datepicker({
         dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true,
     });
-    document.querySelector('#{{ widget.attrs.id}}').setAttribute('autocomplete', 'off');
+    //document.querySelector('#{{ widget.attrs.id}}').setAttribute('autocomplete', 'off');
 </script>
